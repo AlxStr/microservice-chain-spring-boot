@@ -1,0 +1,56 @@
+version: '3.8'
+
+services:
+  gateway:
+    build:
+      context: gateway
+    ports:
+      - "8080:80"
+    environment:
+      - DB_HOST=postgres
+      - DB_NAME=app
+      - DB_PORT=5432
+      - DB_USER=app
+      - DB_USER_PASS=secret
+    depends_on:
+      - postgres
+
+  middlename:
+    build:
+      context: middlename
+    environment:
+      - DB_HOST=postgres
+      - DB_NAME=app
+      - DB_PORT=5432
+      - DB_USER=app
+      - DB_USER_PASS=secret
+    depends_on:
+      - postgres
+
+  lastname:
+    build:
+      context: lastname
+    environment:
+      - DB_HOST=postgres
+      - DB_NAME=app
+      - DB_PORT=5432
+      - DB_USER=app
+      - DB_USER_PASS=secret
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres:14-alpine
+    restart: always
+    environment:
+      - POSTGRES_DB=app
+      - POSTGRES_USER=app
+      - POSTGRES_PASSWORD=secret
+    ports:
+      - '35432:5432'
+    volumes: 
+      - postgres:/var/lib/postgresql/data
+      - ./docker/init.sql:/docker-entrypoint-initdb.d/init.sql      
+
+volumes:
+  postgres:
