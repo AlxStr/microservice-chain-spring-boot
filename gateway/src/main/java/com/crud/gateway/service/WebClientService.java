@@ -10,15 +10,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import com.crud.gateway.dto.StudentDto;
-import com.crud.gateway.dto.StudentInputDto;
 
 import lombok.RequiredArgsConstructor;
 import reactor.core.publisher.Mono;
 
 @Service
 @RequiredArgsConstructor
-public class NamesService {
-    
+public class WebClientService {
+
     @Autowired
     @Qualifier("namesWebClient")
     private final WebClient webClient;
@@ -31,11 +30,11 @@ public class NamesService {
             .block();
     }
 
-    public StudentDto updateNames(UUID ownerId, StudentInputDto input) {
+    public StudentDto updateNames(UUID ownerId, StudentDto input) {
         return this.webClient.put()
             .uri("/{id}", ownerId)
             .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-            .body(Mono.just(input), StudentInputDto.class)
+            .body(Mono.just(input), StudentDto.class)
             .retrieve()
             .bodyToMono(StudentDto.class)
             .block();

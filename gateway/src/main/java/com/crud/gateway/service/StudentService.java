@@ -7,7 +7,6 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 import com.crud.gateway.dto.StudentDto;
-import com.crud.gateway.dto.StudentInputDto;
 import com.crud.gateway.entity.Student;
 import com.crud.gateway.exception.StudentNotFoundException;
 import com.crud.gateway.repository.StudentRepository;
@@ -19,7 +18,7 @@ import lombok.RequiredArgsConstructor;
 public class StudentService {
 
     private final StudentRepository studentRepository;
-    private final NamesService namesService;
+    private final WebClientService namesService;
 
     public List<StudentDto> getAllStudents() {
         return studentRepository.findAll()
@@ -41,7 +40,7 @@ public class StudentService {
                 names.getMiddleName());
     }
 
-    public StudentDto createStudent(StudentInputDto input) {
+    public StudentDto createStudent(StudentDto input) {
         Student student = new Student();
         student.setFirstName(input.getFirstName());
 
@@ -53,7 +52,7 @@ public class StudentService {
                 names.getMiddleName());
     }
 
-    public StudentDto updateStudent(UUID id, StudentInputDto input) {
+    public StudentDto updateStudent(UUID id, StudentDto input) {
         Student student = studentRepository.findById(id)
             .orElseThrow(() -> new StudentNotFoundException());
 
